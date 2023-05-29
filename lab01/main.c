@@ -1,27 +1,33 @@
 #include "lista.h"
 #include <stdlib.h>
+
 void inicializa_lista(Lista * ap_lista){
-    ap_lista = NULL;
+    *ap_lista = NULL;
 }
 
 No* cria_no (No* proximo, int valor){
     No* novo_no = (No*) malloc (sizeof (No));
     novo_no->valor = valor;
     novo_no->proximo = proximo;
+    return novo_no;
 }
 
 void insere_fim(Lista * ap_lista, int valor){
-    // criar novo no.
-    No* novo_no = cria_no (NULL, valor);
+
     //percorrendo a lista
-    if((*ap_lista) == NULL){
+    if((*ap_lista) == NULL){  
        insere_inicio(ap_lista,valor);
        return;
     }
-    No* temp = (*ap_lista)->proximo;
-    while (temp->proximo != NULL){
+
+    // criar novo no.
+    No* novo_no = cria_no (NULL, valor);
+    No* temp = *ap_lista;  // FEEDBACK: podemos comecar do primeiro elemento
+
+    while (temp->proximo != NULL ){  
         temp = temp->proximo;
     }
+
     temp->proximo = novo_no; 
 }
 
@@ -35,28 +41,26 @@ void insere_inicio(Lista * ap_lista, int valor){
 }
 
 int remove_fim(Lista * ap_lista){
-    No* temp_1 = (No*) malloc (sizeof (No));
-    No* temp_2 = (No*) malloc (sizeof (No));
-    temp_1 = *ap_lista, temp_2 = temp_1->proximo;
-    int valor;
+    No* temp_1 = *ap_lista;
+    
+    int valor;    
 
     // no caso de 0 ou 1 elementos.
     if (temp_1 == NULL)
-        return NULL;
-    if (temp_2 == NULL){
+        exit(EXIT_FAILURE);
+
+    if (temp_1->proximo == NULL){
         valor = temp_1->valor;
         free (temp_1);
         *ap_lista = NULL;
         return valor;
     }
     // demais casos.
-    while (temp_2->proximo != NULL){
+    while (temp_1->proximo != NULL){
         temp_1 = temp_1->proximo;
-        temp_2 = temp_1->proximo;
     }
-    temp_1->proximo = NULL;
-    valor = temp_2->valor;
-    free (temp_2);
+    valor = temp_1->valor;
+    free (temp_1);
     return valor;
 }
 
