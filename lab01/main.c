@@ -60,14 +60,17 @@ int remove_fim(Lista * ap_lista){
         temp_1 = temp_1->proximo;
     }
     valor = temp_1->valor;
+    
     free (temp_1);
     return valor;
 }
 
 int remove_inicio(Lista * ap_lista){
+  
     int valor = (*ap_lista)->valor;
     No* temp = *ap_lista;
     *ap_lista = (*ap_lista)->proximo;
+    
     free (temp); 
     return valor;
 }
@@ -81,14 +84,37 @@ void imprime(Lista lista){
 }
 
 void desaloca_lista(Lista *ap_lista){
-    printf("a");
+    No* apagar;
+    for (No* temp = *ap_lista; temp != NULL; temp = temp->proximo){
+      apagar = temp;
+      free (apagar);
+    }
     return;
 }
 int busca(Lista lista, int valor){
-    printf("a");
-    return 0;
+    int i = 0; //contador de ocorrencias    
+    for (No* busca = lista; busca != NULL; busca = busca->proximo){
+      if (busca->valor == valor) i++; 
+    }
+    i > 0 ? return i : return -1;
 }
-int remove_ocorrencias(Lista *ap_lista, int valor){
-    printf("a");
-    return 0;
+int remove_ocorrencias(Lista *ap_lista, int valor){ 
+    int i = 0;
+    No* apagar;
+    No* novo_no = *ap_lista;
+    if (novo_no->valor == valor){
+      apagar = novo_no;
+      *ap_lista = novo_no->proximo;
+      free (apagar);
+      i++;
+    }
+    for (novo_no = *ap_lista; novo_no != NULL; novo_no = novo_no->proximo){
+      if (novo_no->proximo->valor == valor){
+        apagar = novo_no->proximo;
+        novo_no->proximo = novo_no->proximo->proximo;
+        free (apagar);
+        i++;
+      }
+    }
+    return i;
 }
