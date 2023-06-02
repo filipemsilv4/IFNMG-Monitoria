@@ -1,31 +1,23 @@
 #include "lista.h"
+#include <stdlib.h>
+#include <stdio.h>
 /*
  * Implemente as seguintes funcoes utilizando uma lista circular
  * duplamente ligada com no cabeca.
  */
 
-typedef struct {
-  int grau;
-  int coef;
-}TipoDado;
-
-typedef struct No_aux {
-  TipoDado valor;
-  struct No_aux * antec;  
-  struct No_aux * prox;
-} No;
-typedef No * Lista;
 
 /* Inicializa a lista como lista vazia. */
 
 void inicializa_lista(Lista * ap_lista){
-    *ap_lista = (No*) malloc (sizeof(No));
-    (*ap_lista)->valor.grau = (*ap_lista)->valor.coef = NULL;
-    (*ap_lista)->antec = NULL;
-    (*ap_lista)->prox = NULL;
+    *ap_lista = (No*) calloc (1,sizeof(No));
+    (*ap_lista)->antec = *ap_lista;
+    (*ap_lista)->prox = *ap_lista;
+
 }
+
 No* cria_no(TipoDado valor, No* antec, No* prox){
-    
+
    No* novo_no = (No*) malloc (sizeof(No));
    if (novo_no == NULL) exit(2);
 
@@ -40,7 +32,7 @@ No* cria_no(TipoDado valor, No* antec, No* prox){
 void insere_fim(Lista ap_lista, TipoDado valor){
     
    No* novo_no = cria_no(valor, ap_lista->antec, ap_lista);
-   
+
     novo_no->antec->prox = novo_no;
     ap_lista->antec = novo_no;
     return;
@@ -108,10 +100,13 @@ int coeficiente_do_grau(Lista lista, int grau){
    em uma linha separada. */
 void imprime(Lista lista){
    No* temp = lista;
+   printf ("[");
    while (temp->prox != lista && temp == lista){
       temp = temp->prox;
-      printf("%i, %i",,temp->valor.coef)
+      printf("(%i, %i)",temp->valor.grau,temp->valor.coef);
    }
+   printf ("]");
+   return;
 }
 
 /* Desaloca toda a memória alocada da lista.
