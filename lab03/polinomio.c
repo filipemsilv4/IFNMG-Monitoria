@@ -2,6 +2,7 @@
 
 /* Inicializa um polinômio vazio. */
 void inicializa_polinomio(Polinomio * ap_pol){
+    No* no_inicializa = (No*) calloc (1,sizeof(No));
     (*ap_pol)->prox = (*ap_pol)->antec = NULL;
 }
 

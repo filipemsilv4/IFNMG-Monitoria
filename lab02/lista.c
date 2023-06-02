@@ -110,7 +110,7 @@ void imprime(Lista lista){
    No* temp = lista;
    while (temp->prox != lista && temp == lista){
       temp = temp->prox;
-      printf("%i, %i",temp->valor.)
+      printf("%i, %i",,temp->valor.coef)
    }
 }
 
