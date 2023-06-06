@@ -110,7 +110,6 @@ int coeficiente_do_grau(Lista lista, int grau){
    em uma linha separada. */
 void imprime(Lista lista){
    No* temp = lista;
-   
    printf ("[");
    while (temp->prox != lista && temp == lista){
       temp = temp->prox;
