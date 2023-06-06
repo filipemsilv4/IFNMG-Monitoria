@@ -1,31 +1,23 @@
 #include "lista.h"
+#include <stdlib.h>
+#include <stdio.h>
 /*
  * Implemente as seguintes funcoes utilizando uma lista circular
  * duplamente ligada com no cabeca.
  */
 
-typedef struct {
-  int grau;
-  int coef;
-}TipoDado;
-
-typedef struct No_aux {
-  TipoDado valor;
-  struct No_aux * antec;  
-  struct No_aux * prox;
-} No;
-typedef No * Lista;
 
 /* Inicializa a lista como lista vazia. */
 
 void inicializa_lista(Lista * ap_lista){
-    *ap_lista = (No*) malloc (sizeof(No));
-    (*ap_lista)->valor.grau = (*ap_lista)->valor.coef = NULL;
-    (*ap_lista)->antec = NULL;
-    (*ap_lista)->prox = NULL;
+    *ap_lista = (No*) calloc (1,sizeof(No));
+    (*ap_lista)->antec = *ap_lista;
+    (*ap_lista)->prox = *ap_lista;
+
 }
+
 No* cria_no(TipoDado valor, No* antec, No* prox){
-    
+
    No* novo_no = (No*) malloc (sizeof(No));
    if (novo_no == NULL) exit(2);
 
@@ -40,7 +32,7 @@ No* cria_no(TipoDado valor, No* antec, No* prox){
 void insere_fim(Lista ap_lista, TipoDado valor){
     
    No* novo_no = cria_no(valor, ap_lista->antec, ap_lista);
-   
+
     novo_no->antec->prox = novo_no;
     ap_lista->antec = novo_no;
     return;
@@ -94,7 +86,17 @@ int remove_ocorrencias(Lista ap_lista, TipoDado valor){
    Retorna a posição da primeira ocorrencia de valor na lista, comecando de 0=primeira posicao.
    Retorna -1 caso nao encontrado. */
 int busca(Lista lista, TipoDado valor){
+   No* em_analise = lista->prox;
+   
+   int indice = -1;
 
+   while (em_analise->prox != lista || em_analise != lista){
+      indice++;
+      if ((em_analise->valor.coef == valor.coef) && (em_analise->valor.grau == valor.grau))
+         return indice;
+      em_analise = em_analise->prox;
+   }
+   return -1;
 }
 
 /* Retorna o campo coef do primeiro no que contenha grau igual ao parametro grau, 
@@ -108,10 +110,14 @@ int coeficiente_do_grau(Lista lista, int grau){
    em uma linha separada. */
 void imprime(Lista lista){
    No* temp = lista;
+   
+   printf ("[");
    while (temp->prox != lista && temp == lista){
       temp = temp->prox;
-      printf("%i, %i",temp->valor.)
+      printf("(%i, %i)",temp->valor.grau,temp->valor.coef);
    }
+   printf ("]");
+   return;
 }
 
 /* Desaloca toda a memória alocada da lista.
