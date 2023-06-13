@@ -9,40 +9,8 @@ void inicializa_polinomio(Polinomio * ap_pol){
 /* Define que o coeficiente de grau g do polinomio pol eh igual a coef. Deve manter os 
  * coeficientes ordenados por grau. */
 void define_coeficiente(Polinomio pol, int grau, int coef){
-    
-    if (pol->prox == pol){
 
-        No* novo_no = malloc (sizeof(No));
-        novo_no->valor.coef = coef;
-        novo_no->valor.grau = grau;
-        
-        novo_no->prox = pol;
-        novo_no->antec = pol;
-
-        pol->prox = novo_no;
-        pol->antec = novo_no;
-        
-        return;
-    }
-    No* percorre = pol->prox;
-
-    while (grau > percorre->valor.grau && percorre != pol)
-        percorre = percorre->prox;
-    
-    if (grau == percorre->valor.grau){
-        percorre->valor.grau = grau;
-        percorre->valor.coef = coef;
-    } else {
-        No* novo_no = (No*) malloc (sizeof(No));
-        novo_no->valor.coef = coef;
-        novo_no->valor.grau = grau;
-
-        novo_no->prox = percorre->prox;
-        novo_no->antec = percorre;
-        // ligo  primeiramente o novo_no e, depois o seu sucessor e antecessor a ele
-        percorre->prox->antec = novo_no;
-        percorre->prox = novo_no;
-    }
+    if (coef == 0) return;
 
 
     
@@ -50,8 +18,17 @@ void define_coeficiente(Polinomio pol, int grau, int coef){
 
 /* Zera o polinomio, tornando-o um polinomio inicializado, mas igual a zero. Desaloca a memória liberada. */
 void zera(Polinomio pol){
-
-    return;
+    pol->antec->prox = NULL;
+    No* apagando = pol->prox;
+    while (apagando->prox != NULL || apagando != NULL){   //
+        No* apagar = apagando;
+        apagando = apagando->prox;
+        free (apagar);
+    }
+    No* novo_no = (No*) malloc (sizeof(No));
+    pol->prox = pol->antec = novo_no;
+    novo_no->prox = novo_no->antec = pol;
+    novo_no->valor.coef = novo_no->valor.grau = 0;
 }
 
 /* Computa a soma dos polinomios a e b colocando o resultado em res. 
