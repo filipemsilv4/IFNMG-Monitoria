@@ -1,16 +1,48 @@
 #include "lab.03.c"
-
+#include <stdlib.h>
 /* Inicializa um polinômio vazio. */
 void inicializa_polinomio(Polinomio * ap_pol){
-    No* no_inicializa = (No*) calloc (1,sizeof(No));
-    (*ap_pol)->prox = (*ap_pol)->antec = NULL;
+    *ap_pol = (No*) calloc (1,sizeof(No));
+    (*ap_pol)->prox = (*ap_pol)->antec = (*ap_pol);
 }
 
-/* Define que o coeficiente de grau grau do polinomio pol eh igual a coef. Deve manter os 
+/* Define que o coeficiente de grau g do polinomio pol eh igual a coef. Deve manter os 
  * coeficientes ordenados por grau. */
 void define_coeficiente(Polinomio pol, int grau, int coef){
+    
+    if (pol->prox == pol){
 
-    if (coef == 0) return;
+        No* novo_no = malloc (sizeof(No));
+        novo_no->valor.coef = coef;
+        novo_no->valor.grau = grau;
+        
+        novo_no->prox = pol;
+        novo_no->antec = pol;
+
+        pol->prox = novo_no;
+        pol->antec = novo_no;
+        
+        return;
+    }
+    No* percorre = pol->prox;
+
+    while (grau > percorre->valor.grau && percorre != pol)
+        percorre = percorre->prox;
+    
+    if (grau == percorre->valor.grau){
+        percorre->valor.grau = grau;
+        percorre->valor.coef = coef;
+    } else {
+        No* novo_no = (No*) malloc (sizeof(No));
+        novo_no->valor.coef = coef;
+        novo_no->valor.grau = grau;
+
+        novo_no->prox = percorre->prox;
+        novo_no->antec = percorre;
+        // ligo  primeiramente o novo_no e, depois o seu sucessor e antecessor a ele
+        percorre->prox->antec = novo_no;
+        percorre->prox = novo_no;
+    }
 
 
     
@@ -18,17 +50,8 @@ void define_coeficiente(Polinomio pol, int grau, int coef){
 
 /* Zera o polinomio, tornando-o um polinomio inicializado, mas igual a zero. Desaloca a memória liberada. */
 void zera(Polinomio pol){
-    pol->antec->prox = NULL;
-    No* apagando = pol->prox;
-    while (apagando->prox != NULL || apagando != NULL){   //
-        No* apagar = apagando;
-        apagando = apagando->prox;
-        free (apagar);
-    }
-    No* novo_no = (No*) malloc (sizeof(No));
-    pol->prox = pol->antec = novo_no;
-    novo_no->prox = novo_no->antec = pol;
-    novo_no->valor.coef = novo_no->valor.grau = 0;
+
+    return;
 }
 
 /* Computa a soma dos polinomios a e b colocando o resultado em res. 
@@ -39,7 +62,9 @@ void soma(Polinomio res, Polinomio a, Polinomio b){
 
 /* Computa a subtracao dos polinomios a e b colocando o resultado em res. 
  * Libera a memória anteriormente utilizada pelos nos descartados de res, e sobreescreve res. */
-void subtrai(Polinomio res, Polinomio a, Polinomio b);
+void subtrai(Polinomio res, Polinomio a, Polinomio b){
+
+}
 
 /* /\* Computa a multiplicacao dos polinomios a e b colocando o resultado em res.  */
 /*  * Libera a memória anteriormente utilizada pelos nos descartados de res, e sobreescreve res. *\/ */
@@ -54,11 +79,12 @@ void imprime(Polinomio pol){
 
     No* percorre = pol->prox;
     printf("[");
-    while(percorre->prox == pol){
-        printf ("(%i,%i),", percorre->valor.grau, percorre->valor.coef);
+    while(percorre->prox != pol){
+        printf ("(%d,%d),", percorre->valor.grau, percorre->valor.coef);
         percorre = percorre->prox;
     }
-    printf ("(%i,%i)]");
+    printf ("(%d,%d)]\n", percorre->valor.grau, percorre->valor.coef);
+    return;
 }
 
 /* Desaloca toda a memória alocada da lista.
@@ -71,6 +97,7 @@ void desaloca_polinomio(Polinomio *ap_pol){
         No* apagar = apagando;
         apagando = apagando->prox;
         free (apagar);
-    }    
+    }   
+    free(ap_pol); 
     return;
 }
