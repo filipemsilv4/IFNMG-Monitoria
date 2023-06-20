@@ -57,7 +57,7 @@ void define_coeficiente (Polinomio pol, int grau, int coef){
 
 /* Zera o polinomio, tornando-o um polinomio inicializado, mas igual a zero. Desaloca a memória liberada. */
 void zera (Polinomio pol){
-
+    
     pol->antec->prox = NULL;
     No* apagando = pol->prox;
 
@@ -77,7 +77,72 @@ void zera (Polinomio pol){
 /* Computa a soma dos polinomios a e b colocando o resultado em res. 
  * Libera a memória anteriormente utilizada pelos nos descartados de res, e sobreescreve res. */
 void soma (Polinomio res, Polinomio a, Polinomio b){
-    printf("ABC");
+    
+    inicializa_polinomio (&res);
+
+    if (a->prox == a){
+        res = b;
+        return;
+    }
+    if (b->prox == b){
+        res = a;
+        return;
+    }
+
+    No* peratualA = a->prox;
+    No* peratualB = b->prox;
+    
+    while(peratualA != a && peratualB != b){                    // a estrutura percorre a e b simultaneamente onde, ela incrementa em res e, tambem, ja ordena res 
+
+        if ( peratualB->valor.grau == peratualA->valor.grau){
+
+            define_coeficiente (res, peratualA->valor.grau, peratualA->valor.coef + peratualB->valor.coef);
+
+            peratualA = peratualA->prox;
+            peratualB = peratualB->prox;
+
+        }
+        else if ( peratualB->valor.grau > peratualA->valor.grau){
+            
+            define_coeficiente(res, peratualA->valor.grau, peratualA->valor.coef);
+
+            peratualA = peratualA->prox;
+
+        }
+        else if ( peratualA->valor.grau > peratualB->valor.grau){
+            
+            define_coeficiente(res, peratualB->valor.grau, peratualB->valor.coef);
+
+            peratualB = peratualB->prox;
+
+        }
+    }
+
+        while (peratualB != b){
+
+            define_coeficiente (res, peratualB->valor.grau, peratualB->valor.coef);
+
+            peratualB = peratualB->prox;
+
+        }
+    
+ 
+
+        while (peratualA != a){
+            
+            define_coeficiente (res, peratualA->valor.grau, peratualA->valor.coef);
+
+            peratualA = peratualA->prox;
+
+        }
+        printf ("C:");
+        imprime(res);
+    return;
+}
+
+/* Computa a subtracao dos polinomios a e b colocando o resultado em res. 
+ * Libera a memória anteriormente utilizada pelos nos descartados de res, e sobreescreve res. */
+void subtrai (Polinomio res, Polinomio a, Polinomio b){
     zera (res);
 
     if (a->prox == a){
@@ -182,13 +247,6 @@ void soma (Polinomio res, Polinomio a, Polinomio b){
 
         }
     }
-}
-
-/* Computa a subtracao dos polinomios a e b colocando o resultado em res. 
- * Libera a memória anteriormente utilizada pelos nos descartados de res, e sobreescreve res. */
-void subtrai (Polinomio res, Polinomio a, Polinomio b){
-    
-    return;
 }
 
 /* /\* Computa a multiplicacao dos polinomios a e b colocando o resultado em res.  */
