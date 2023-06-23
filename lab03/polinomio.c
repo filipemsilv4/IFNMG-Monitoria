@@ -2,22 +2,22 @@
 #include <stdlib.h>
 
 /* Inicializa um polinômio vazio. */
-void inicializa_polinomio (Polinomio * ap_pol){
+void inicializa_polinomio ( Polinomio * ap_pol){
 
-    *ap_pol = (No*) calloc (1,sizeof(No));
-    (*ap_pol)->prox = (*ap_pol)->antec = (*ap_pol);
+    *ap_pol = ( No*) calloc ( 1,sizeof ( No));
+    ( *ap_pol)->prox = ( *ap_pol)->antec = ( *ap_pol);
 
 }
 
 /* Define que o coeficiente de grau g do polinomio pol eh igual a coef. Deve manter os 
  * coeficientes ordenados por grau. */
-void define_coeficiente (Polinomio pol, int grau, int coef){
+void define_coeficiente ( Polinomio pol, int grau, int coef){
 
     No* percorre = pol;
 
-    if (pol->prox == pol){
+    if ( pol->prox == pol){
         
-        No* novo_noAB = (No*) malloc (sizeof (No));
+        No* novo_noAB = ( No*) malloc (sizeof ( No));
         novo_noAB->valor.grau = grau;
         novo_noAB->valor.coef = coef;
 
@@ -31,10 +31,10 @@ void define_coeficiente (Polinomio pol, int grau, int coef){
 
     }
 
-    while (percorre->prox->valor.grau < grau && percorre->prox != pol)
+    while ( percorre->prox->valor.grau < grau && percorre->prox != pol)
         percorre = percorre->prox;
     
-    if (percorre->valor.grau == grau){
+    if ( percorre->valor.grau == grau){
 
         percorre->valor.grau = grau;
         percorre->valor.coef = coef;
@@ -42,7 +42,8 @@ void define_coeficiente (Polinomio pol, int grau, int coef){
 
     }
     
-    No* novo_noAB = (No*) malloc (sizeof(No));
+    No* novo_noAB = ( No*) malloc (sizeof( No));
+
     novo_noAB->valor.grau = grau;
     novo_noAB->valor.coef = coef;
 
@@ -56,12 +57,12 @@ void define_coeficiente (Polinomio pol, int grau, int coef){
 }
 
 /* Zera o polinomio, tornando-o um polinomio inicializado, mas igual a zero. Desaloca a memória liberada. */
-void zera (Polinomio pol){
+void zera ( Polinomio pol){
     
     pol->antec->prox = NULL;
     No* apagando = pol->prox;
 
-    while (apagando->prox != NULL || apagando != NULL){   
+    while ( apagando->prox != NULL || apagando != NULL){   
         No* apagar = apagando;
         apagando = apagando->prox;
         free (apagar);
@@ -76,9 +77,9 @@ void zera (Polinomio pol){
 
 /* Computa a soma dos polinomios a e b colocando o resultado em res. 
  * Libera a memória anteriormente utilizada pelos nos descartados de res, e sobreescreve res. */
-void soma (Polinomio res, Polinomio a, Polinomio b){
+void soma ( Polinomio res, Polinomio a, Polinomio b){
     
-    inicializa_polinomio (&res);
+    inicializa_polinomio ( &res);
 
     if (a->prox == a){
         res = b;
@@ -92,35 +93,49 @@ void soma (Polinomio res, Polinomio a, Polinomio b){
     No* peratualA = a->prox;
     No* peratualB = b->prox;
     
-    while(peratualA != a && peratualB != b){                    // a estrutura percorre a e b simultaneamente onde, ela incrementa em res e, tambem, ja ordena res 
+    while ( peratualA != a && peratualB != b){                    // a estrutura percorre a e b simultaneamente onde, ela incrementa em res e, tambem, ja ordena res 
 
         if ( peratualB->valor.grau == peratualA->valor.grau){
 
-            define_coeficiente (res, peratualA->valor.grau, peratualA->valor.coef + peratualB->valor.coef);
+            if ( peratualB->valor.coef == peratualA->valor.coef){
 
-            peratualA = peratualA->prox;
-            peratualB = peratualB->prox;
+                No* apagar_elementoA = peratualA;
+                No* apagar_elementoB = peratualB;
 
+                peratualA->antec->prox = peratualA->prox;
+                peratualB->prox->antec = peratualA->antec;
+
+                free ( apagar_elementoA);
+                free ( apagar_elementoB);
+
+            } else {
+
+                define_coeficiente ( res, peratualA->valor.grau, peratualA->valor.coef - peratualB->valor.coef);
+
+                 peratualA = peratualA->prox;
+                 peratualB = peratualB->prox;
+
+            }
         }
         else if ( peratualB->valor.grau > peratualA->valor.grau){
             
-            define_coeficiente(res, peratualA->valor.grau, peratualA->valor.coef);
+            define_coeficiente ( res, peratualA->valor.grau, peratualA->valor.coef);
 
             peratualA = peratualA->prox;
 
         }
         else if ( peratualA->valor.grau > peratualB->valor.grau){
             
-            define_coeficiente(res, peratualB->valor.grau, peratualB->valor.coef);
+            define_coeficiente ( res, peratualB->valor.grau, peratualB->valor.coef);
 
             peratualB = peratualB->prox;
 
         }
     }
 
-        while (peratualB != b){
+        while ( peratualB != b){
 
-            define_coeficiente (res, peratualB->valor.grau, peratualB->valor.coef);
+            define_coeficiente ( res, peratualB->valor.grau, peratualB->valor.coef);
 
             peratualB = peratualB->prox;
 
@@ -128,22 +143,22 @@ void soma (Polinomio res, Polinomio a, Polinomio b){
     
  
 
-        while (peratualA != a){
+        while ( peratualA != a){
             
-            define_coeficiente (res, peratualA->valor.grau, peratualA->valor.coef);
+            define_coeficiente ( res, peratualA->valor.grau, peratualA->valor.coef);
 
             peratualA = peratualA->prox;
 
         }
-        printf ("C:");
-        imprime(res);
+
     return;
 }
 
 /* Computa a subtracao dos polinomios a e b colocando o resultado em res. 
  * Libera a memória anteriormente utilizada pelos nos descartados de res, e sobreescreve res. */
-void subtrai (Polinomio res, Polinomio a, Polinomio b){
-    zera (res);
+void subtrai ( Polinomio res, Polinomio a, Polinomio b){
+    
+    inicializa_polinomio ( &res);
 
     if (a->prox == a){
         res = b;
@@ -161,92 +176,47 @@ void subtrai (Polinomio res, Polinomio a, Polinomio b){
 
         if ( peratualB->valor.grau == peratualA->valor.grau){
 
-            No* novo_noAB = calloc (1,sizeof(No));
-
-            novo_noAB->valor.coef = peratualB->valor.coef + peratualA->valor.coef;
-
-            novo_noAB->prox = res;
-            novo_noAB->antec = res->antec;
-
-            res->antec->prox = novo_noAB;
-            res->antec = novo_noAB;
+            define_coeficiente (res, peratualA->valor.grau, peratualA->valor.coef - peratualB->valor.coef);
 
             peratualA = peratualA->prox;
             peratualB = peratualB->prox;
 
-            break;
         }
-        if ( peratualB->valor.grau >= peratualA->valor.grau){
+        else if ( peratualB->valor.grau > peratualA->valor.grau){
             
-            No* novo_noA = calloc (1,sizeof(No));
-
-            novo_noA->valor.coef = peratualB->valor.coef;
-
-            novo_noA->prox = res;
-            novo_noA->antec = res->antec;
-
-            res->antec->prox = novo_noA;
-            res->antec = novo_noA;
+            define_coeficiente ( res, peratualA->valor.grau, peratualA->valor.coef);
 
             peratualA = peratualA->prox;
 
-            break;
         }
-        if ( peratualA->valor.grau >= peratualB->valor.grau){
+        else if ( peratualA->valor.grau > peratualB->valor.grau){
             
-            No* novo_noB = calloc (1,sizeof(No));
-
-            novo_noB->valor.coef = peratualB->valor.coef;
-
-            novo_noB->prox = res;
-            novo_noB->antec = res->antec;
-
-            res->antec->prox = novo_noB;
-            res->antec = novo_noB;
-
-            peratualB = peratualB->prox;
-
-            break;
-        }
-    }
-    if (peratualA == a){
-
-        while (peratualB != b){
-
-            No* pol_restante = calloc (1,sizeof(No));
-
-            pol_restante->valor.coef = peratualB->valor.coef;
-            pol_restante->valor.grau = peratualB->valor.grau;
-
-            pol_restante->prox = res;
-            pol_restante->antec = res->antec;
-
-            res->antec->prox = pol_restante;
-            res->antec = pol_restante;
+            define_coeficiente ( res, peratualB->valor.grau, peratualB->valor.coef);
 
             peratualB = peratualB->prox;
 
         }
     }
-    if (peratualB == b){   
 
-        while (peratualA != a){
+        while ( peratualB != b){
+
+            define_coeficiente ( res, peratualB->valor.grau, peratualB->valor.coef);
+
+            peratualB = peratualB->prox;
+
+        }
+    
+ 
+
+        while ( peratualA != a){
             
-            No* pol_restante = calloc (1,sizeof(No)); 
-
-            pol_restante->valor.coef = peratualA->valor.coef;
-            pol_restante->valor.grau = peratualA->valor.grau;
-
-            pol_restante->prox = res;
-            pol_restante->antec = res->antec;
-
-            res->antec->prox = pol_restante;
-            res->antec = pol_restante;
+            define_coeficiente (res, peratualA->valor.grau, peratualA->valor.coef);
 
             peratualA = peratualA->prox;
 
         }
-    }
+
+    return;
 }
 
 /* /\* Computa a multiplicacao dos polinomios a e b colocando o resultado em res.  */
