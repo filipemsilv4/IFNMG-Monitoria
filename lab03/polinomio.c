@@ -97,25 +97,11 @@ void soma ( Polinomio res, Polinomio a, Polinomio b){
 
         if ( peratualB->valor.grau == peratualA->valor.grau){
 
-            if ( peratualB->valor.coef == peratualA->valor.coef){
+            define_coeficiente ( res, peratualA->valor.grau, peratualA->valor.coef - peratualB->valor.coef);
 
-                No* apagar_elementoA = peratualA;
-                No* apagar_elementoB = peratualB;
+            peratualA = peratualA->prox;
+            peratualB = peratualB->prox;
 
-                peratualA->antec->prox = peratualA->prox;
-                peratualB->prox->antec = peratualA->antec;
-
-                free ( apagar_elementoA);
-                free ( apagar_elementoB);
-
-            } else {
-
-                define_coeficiente ( res, peratualA->valor.grau, peratualA->valor.coef - peratualB->valor.coef);
-
-                 peratualA = peratualA->prox;
-                 peratualB = peratualB->prox;
-
-            }
         }
         else if ( peratualB->valor.grau > peratualA->valor.grau){
             
@@ -172,11 +158,14 @@ void subtrai ( Polinomio res, Polinomio a, Polinomio b){
     No* peratualA = a->prox;
     No* peratualB = b->prox;
     
-    while(peratualA != a && peratualB != b){                    // a estrutura percorre a e b simultaneamente onde, ela incrementa em res e, tambem, ja ordena res 
+    while( peratualA != a && peratualB != b){                    // a estrutura percorre a e b simultaneamente onde, ela incrementa em res e, tambem, ja ordena res 
 
         if ( peratualB->valor.grau == peratualA->valor.grau){
 
-            define_coeficiente (res, peratualA->valor.grau, peratualA->valor.coef - peratualB->valor.coef);
+            if ( peratualA->valor.coef - peratualB->valor.coef != 0){
+
+                define_coeficiente ( res, peratualA->valor.grau, peratualA->valor.coef - peratualB->valor.coef);
+            }
 
             peratualA = peratualA->prox;
             peratualB = peratualB->prox;
@@ -191,11 +180,12 @@ void subtrai ( Polinomio res, Polinomio a, Polinomio b){
         }
         else if ( peratualA->valor.grau > peratualB->valor.grau){
             
-            define_coeficiente ( res, peratualB->valor.grau, peratualB->valor.coef);
+            define_coeficiente ( res, peratualB->valor.grau, peratualB->valor.coef * (-1));
 
             peratualB = peratualB->prox;
 
         }
+        imprime (res);
     }
 
         while ( peratualB != b){
