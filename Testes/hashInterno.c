@@ -45,13 +45,13 @@ int main (void){
 
 }
 
-void insere_na_tabela(int chave, int pos, bucket tabela[]){
+void insere_na_tabela(int chave, int pos, bucket tabela[]){             // Se, a quantidade de chaves for menor que 3, significa, que pode-se colocar a chave com índice de valor = à qtt_chaves;
     if (tabela[pos].qtt_chaves < BUCKET_SIZE){
         tabela[pos].chave[tabela[pos].qtt_chaves] = chave;
         tabela[pos].qtt_chaves++;
-    } else {
-        if (tabela[pos].desvio_index == SEM_DESVIO)
-            tabela[pos].desvio_index = find_free_index(tabela);
+    } else {                                                            // Se não, eu verifico se essa posição da hash, não possui endereço de desvio(SEM_DESVIO = -1) e, caso nao tenha, prontifico a função que busca este index 
+        if (tabela[pos].desvio_index == SEM_DESVIO)                     // para retornar o valor de [índice] passando seu valor para desvio_index para o endereço da tabela respectiva, antes, da instância recursiva que servirá para o caso
+            tabela[pos].desvio_index = find_free_index(tabela);         // em que ele ja tem um desvio configurado e para o caso em que precisa identificar 
         insere_na_tabela(chave, tabela[pos].desvio_index, tabela);
     }
 }
@@ -65,9 +65,8 @@ void imprime (bucket tabela[]){
 
     for(int i = 0; i < TABLE_SIZE; ++i){
         printf("[Pos %d] ",i);
-        for (int j = 0; j < tabela[i].qtt_chaves; ++j){
+        for (int j = 0; j < tabela[i].qtt_chaves; ++j)
             printf("%d ", tabela[i].chave[j]);
-        }
         printf("\n");
     }
     return;
