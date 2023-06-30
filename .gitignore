@@ -4,3 +4,4 @@ lab01/main
 *.exe
 lab03/.vscode/settings.json
 Testes/hashInterno
+Testes/hashdesviosucessivo

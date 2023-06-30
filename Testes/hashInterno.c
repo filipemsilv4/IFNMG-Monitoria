@@ -50,8 +50,8 @@ void insere_na_tabela(int chave, int pos, bucket tabela[]){             // Se, a
         tabela[pos].chave[tabela[pos].qtt_chaves] = chave;
         tabela[pos].qtt_chaves++;
     } else {                                                            // Se não, eu verifico se essa posição da hash, não possui endereço de desvio(SEM_DESVIO = -1) e, caso nao tenha, prontifico a função que busca este index 
-        if (tabela[pos].desvio_index == SEM_DESVIO)                     // para retornar o valor de [índice] passando seu valor para desvio_index para o endereço da tabela respectiva, antes, da instância recursiva que servirá para o caso
-            tabela[pos].desvio_index = find_free_index(tabela);         // em que ele ja tem um desvio configurado e para o caso em que precisa identificar 
+        if (tabela[pos].desvio_index == SEM_DESVIO)                     // para retornar o valor de [índice] passando seu valor para desvio_index para o endereço da tabela //respectiva, antes, da instância recursiva que servirá para o caso
+            tabela[pos].desvio_index = find_free_index(tabela);         // em que ele ja tem um desvio configurado e para o caso em que precisa identificar um desvio
         insere_na_tabela(chave, tabela[pos].desvio_index, tabela);
     }
 }
