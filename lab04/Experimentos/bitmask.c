@@ -1,3 +1,5 @@
+// Fonte: https://github.com/filipemsilv4/IFNMG-AEDS-2022-2/tree/main/Lab6-Cobertura-Exata-por-Conjuntos/Experimentos
+
 // codigo consiste em shiftar - mover - um bit posiçao por posiçao e, juntamente, 
 // printar seu atual valor e posiçao
 #include <stdio.h>
