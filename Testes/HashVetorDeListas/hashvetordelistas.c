@@ -16,69 +16,60 @@ typedef struct{
     struct No* prox;
 }No, *Lista;
 
-void inicializa_hash (Lista* tabela[]);
-void inicializa_lista (Lista* nova_lista);
-No* cria_no (tipodado pessoa);
-void insere_no (No* atual);
+void inicializa_hash (Lista tabela[]);
+No* cria_no (tipodado pessoa, No* seu_proximo);
 tipodado cria_ficha();
-void insere_tabela (Lista* tabela[], tipodado* pessoa); 
+void insere_tabela (Lista tabela[], tipodado pessoa); 
 int hash (int chave);
-bool busca_na_tabela(Lista* tabela[], int idade, char* nome, int cpf);
+bool busca_na_tabela(Lista tabela[], int idade, char* nome, int cpf);
 
-void imprime (Lista* tabela[TABLE_SIZE]);
+void imprime (Lista tabela[]);
 int main (void){
-    Lista* lista[TABLE_SIZE];
+    Lista tabela[TABLE_SIZE];
     int i;
     inicializa_hash(lista);
-    printf("Digite 1 para inserir na tabela, 2 para imprimir toda a tabela\n");
+    printf("Digite 1 para inserir na tabela\n 2 para imprimir toda a tabela\n");
     scanf ("%d",&i);
     switch(i){
-        case  1: insere_tabela (lista, cria_ficha())
+        case  1: insere_tabela (tabela, cria_ficha())
     }
     imprime (lista);
     return 0;
 }
-void inicializa_hash(Lista* tabela[]){    
-    for(int i = 0; i != TABLE_SIZE; i++){
-        inicializa_lista (&tabela[i]);
+int hash (int chave){
+    return chave % TABLE_SIZE;
+}
+void inicializa_hash (Lista tabela[]){
+    for(int i = 0; TABLE_SIZE > i; i++){
+        tabela[i] = NULL;
     }
 }
-void inicializa_lista (Lista* nova_lista){
-    *nova_lista= NULL;    // poderia utilizar o NULL tambem
-}
-int hash (int chave){return chave % TABLE_SIZE;}
+No* cria_no (tipodado pessoa, No* seu_proximo){
+    No* novo_no = malloc (sizeof(No));
+    novo_no->pessoa = pessoa;
 
-No* cria_no (tipodado* pessoa){
-    No* novo_no = malloc(sizeof(No));
-    novo_no->pessoa = (*pessoa);
-    free (pessoa);
+    novo_no->prox = seu_proximo;
     return novo_no;
 }
-void insere_no (No* novo_no, No* atual){
-    novo_no->prox = NULL;
-    atual->prox = novo_no;
+tipodado cria_ficha(){
+    tipodado nova_pessoa;
+    gets(nova_pessoa.nome);
+    while(getchar() != '\n');
+    scanf("%d", &nova_pessoa.idade);
+    while(getchar() != '\n');
+    scanf("%d", &nova_pessoa.cpf);
 }
-void insere_tabela (Lista* tabela[], tipodado* pessoa){
-    No* percorre = tabela[hash (pessoa->idade)];
-    while (percorre != NULL)
-        percorre = percorre->prox;
-    insere_no (cria_no (pessoa), percorre);
-    
-}
-tipodado* cria_ficha (){
-    tipodado* nova_pessoa = malloc (sizeof(tipodado));
-    printf ("Digite respectivamente, Nome,Idade,CPF.\n");
-    fgets (nova_pessoa->nome);
-    while ((getchar()) != '\n');
-    scanf ("%i", nova_pessoa->idade);
-    while ((getchar()) != '\n');
-    scanf ("%i",nova_pessoa->cpf);
-
-    return nova_pessoa;
-}
-void imprime (Lista* tabela[]){
-    for (int i = 0; i < TABLE_SIZE; i++){
-        for(No* atual = tabela[i]->prox; atual != NULL; atual = atual->prox)
-            printf ("Nome: %s, Idade: %i, CPF: %i\n", atual.pessoa.nome, atual.pessoa.idade, atual.pessoa.cpf);
+void imprime (Lista tabela[]){
+    for(int i = 0; TABLE_SIZE > i; i++){
+        printf("Lista %d: ", i);
+        No* percorre = tabela[i].prox;
+        while(percorre != NULL){
+            printf("%s\n %d\n %d", percorre->pessoa.nome, percorre->pessoa.idade, percorre->pessoa.cpf);
+            percorre = percorre->prox;
+        }
+        printf("\n");
     }
+}
+void insere_tabela (Lista tabela[], tipodado pessoa){
+    tabela[hash(pessoa.idade)] = cria_no( pessoa, tabela[hash(pessoa.idade)].prox);
 }
