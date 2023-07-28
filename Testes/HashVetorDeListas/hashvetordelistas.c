@@ -5,12 +5,12 @@
 #include <unistd.h>
 
 #define TABLE_SIZE 15
-
+#define LIMIT_NOME 50
 typedef unsigned long long int ulli;
 
 typedef struct{
     int idade;
-    char* nome;
+    char nome[LIMIT_NOME];
     ulli cpf;
 }tipodado;
 
@@ -35,9 +35,9 @@ int main (void){
     while(true){
         scanf ("%d",&i);
         switch(i){
-            case 1: insere_tabela (tabela, cria_ficha());
-            case 2: imprime (tabela);
-            case 3: insere_auto(tabela);
+            case 1: insere_tabela (tabela, cria_ficha()); break;
+            case 2: imprime (tabela); break;
+            case 3: insere_auto(tabela); break;
         }
     }
     return 0;
@@ -60,23 +60,20 @@ No* cria_no (tipodado pessoa, No* seu_proximo){
 }
 
 tipodado cria_ficha(){
-    char nome[50];
-    scanf("%[^\n]",nome);
-    while(getchar() != '\n');
-    int i = strlen(nome);
-    tipodado nova_pessoa;
-    nova_pessoa.nome = malloc (i * sizeof(char));
-    strcpy(nova_pessoa.nome, nome);
-    while(getchar() != '\n');
-    scanf("%d", &nova_pessoa.idade);
-    while(getchar() != '\n');
-    scanf("%lli", &nova_pessoa.cpf);
+    tipodado pessoa;
+    // Nome
+    fgets(pessoa.nome, LIMIT_NOME, stdin);
+    pessoa.nome[strlen(pessoa.nome)-1] = '\0';
+    // Idade
+    scanf("%i", &pessoa.idade);
+    // Cpf
+    scanf("%lli", &pessoa.cpf);
 
-    printf("%s", nova_pessoa.nome);
-    return nova_pessoa;
+    return pessoa;
 }
 
 void imprime (Lista tabela[]){
+    printf("[ impressao da lista ]\n");
     for(int i = 0; TABLE_SIZE > i; i++){
         printf("Lista %d: ", i);
         No* percorre = tabela[i];
@@ -94,7 +91,7 @@ void insere_tabela (Lista tabela[], tipodado pessoa){
 void insere_auto(Lista tabela[]){
     int i  = 0;
     tipodado pessoa;
-    pessoa.nome = "Teste";
+    strcpy(pessoa.nome, "Teste");
     pessoa.cpf = 17786167625;
     while(i < TABLE_SIZE){
         pessoa.idade = i + rand() % 100;
